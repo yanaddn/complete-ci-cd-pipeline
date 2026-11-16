@@ -67,8 +67,6 @@ pipeline {
             }
             steps {
                 script {
-                    # sleep(time:90, unit: "SECONDS") // wait for EC2 instance to initialize
-
                     echo 'deploying docker image to EC2...'
                     def shellCmd = "bash ./server-cmds.sh ${env.IMAGE_NAME} ${DOCKER_CREDS_USR} ${DOCKER_CREDS_PSW}"
                     def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
