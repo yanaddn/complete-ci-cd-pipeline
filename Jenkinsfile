@@ -13,13 +13,9 @@ pipeline {
         maven 'maven3.6'
     }
     stages {
-        stage("increment app version") {
+        stage('set image name') {
             steps {
                 script {
-                    echo 'incrementing app version...'
-                    sh 'mvn build-helper:parse-version versions:set \
-                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
-                        versions:commit'
                     def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
                     def version = matcher[0][1]
                     env.IMAGE_NAME = "yanadidun/java-maven-app:${version}-${BUILD_NUMBER}"
@@ -85,23 +81,5 @@ pipeline {
                 }
             }
         }
-        /*
-        stage('commit version update') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'github-creds', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                        // git config for the first time run
-                        sh 'git config --global user.email "jenkins@example.com"'
-                        sh 'git config --global user.name "jenkins"'
-
-                        sh 'git remote set-url origin https://${USER}:${PASS}@github.com/yanaddn/java-maven-app.git'
-                        sh 'git add .'
-                        sh 'git commit -m "ci: version bump [ci skip]"'
-                        sh 'git push origin HEAD:aws-docker-compose'
-                    }
-                }
-            }
-        }
-        */
     }   
 }
