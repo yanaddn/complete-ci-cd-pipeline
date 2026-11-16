@@ -67,13 +67,13 @@ pipeline {
             }
             steps {
                 script {
-                    sleep(time:90, unit: "SECONDS") // wait for EC2 instance to initialize
+                    # sleep(time:90, unit: "SECONDS") // wait for EC2 instance to initialize
 
                     echo 'deploying docker image to EC2...'
                     def shellCmd = "bash ./server-cmds.sh ${env.IMAGE_NAME} ${DOCKER_CREDS_USR} ${DOCKER_CREDS_PSW}"
                     def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
                     
-                    sshagent(['myapp-key-pair']) {
+                    sshagent([''ec2-server-key]) {
                         sh "scp -o StrictHostKeyChecking=no server-cmds.sh ${ec2Instance}:/home/ec2-user"
                         sh "scp -o StrictHostKeyChecking=no docker-compose.yaml ${ec2Instance}:/home/ec2-user"
                         sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${shellCmd}"
