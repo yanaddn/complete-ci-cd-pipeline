@@ -18,7 +18,6 @@ resource "aws_subnet" "myapp-subnet-1" {
   }
 }
 
-/*
 resource "aws_default_route_table" "main-rtb" {
    default_route_table_id = aws_vpc.myapp-vpc.default_route_table_id
 
@@ -36,8 +35,6 @@ resource "aws_default_route_table" "main-rtb" {
   subnet_id      = aws_subnet.myapp-subnet-1.id
   route_table_id = aws_default_route_table.main-rtb.id
 }
-
-*/
 
  resource "aws_internet_gateway" "myapp-igw" {
 	vpc_id = aws_vpc.myapp-vpc.id
@@ -90,15 +87,8 @@ resource "aws_instance" "myapp-server" {
   vpc_security_group_ids      = [aws_default_security_group.default-sg.id]
   availability_zone			      = var.avail_zone
 
-/*
-  user_data = <<-EOF
-    #!/bin/bash
-    yum update -y && yum install -y docker
-    systemctl enable --now docker
-    usermod -aG docker ec2-user
-    docker run -d -p 8080:80 nginx
-  EOF
-*/
+  user_data                   = file("entry-script.sh")
+  user_data_replace_on_change = true
 
   tags = {
     Name = "${var.env_prefix}-server"
