@@ -1,0 +1,10 @@
+#!/bin/bash
+sudo yum update -y && sudo yum install -y docker
+sudo systemctl start docker 
+sudo usermod -aG docker ec2-user
+
+# install docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+#sudo docker run -p 8080:80 nginx
